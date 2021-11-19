@@ -41,16 +41,40 @@ class ArticlesController extends Controller
 
         // SELECT * FROM `words` WHERE `text` IN ('в', 'и', 'c')
 
-        $issetWordsInDB = Words::whereNotIn('text', $body)->get(['text'])->pluck('text')->toArray();
+        $issetWordsInDB = Words::whereIn('text', $body)->get(['text'])->pluck('text')->toArray();
 
         $mergeArrays = array_merge($body, $issetWordsInDB);
 
         $resultsArray = array_diff($mergeArrays, array_diff_assoc($mergeArrays, array_unique($mergeArrays)));
 
-        Words::insert(['text' => $resultsArray]);
+        $wordsArrayForInsert = [];
+        foreach ($resultsArray as $value) {
+            $wordsArrayForInsert[] = ['text' => $value];
+        }
 
-        return $resultsArray;
-        dd();
+        if(count($wordsArrayForInsert) > 0){
+            Words::insert($wordsArrayForInsert);
+        }
+
+        // ver 2
+        // 1. получаю массив idшников НОВЫХ слов (SELECT * FROM `words` WHERE `text` IN ('в','и')
+        // 2. получил массив айдишников статей и текстов этих статей (select (id, body) from articles)
+        // 3. в цикле беру слово и проверяю сколько раз оно содержится в каждой из статей
+        // ->
+
+
+        $NewWordsInDB = Words::whereIn('text', $body)->get(['id', 'text'])->toArray();
+        $articlesArray = Articles::get(['id', 'body'])->toArray();
+        $relation  = [];
+        foreach ($NewWordsInDB as $word){
+            foreach ($articlesArray as $article){
+                $counter = substr_count(mb_strtolower(' '.$article["body"].' '), ' '.$word["text"].' ');
+                if($counter !== 0){
+                    $relation[] = '(' . $word["id"] . ',' . $article["id"] . ',' . $counter . ')';
+                }
+            }
+        }
+        return $relation;
     }
 
 }
