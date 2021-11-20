@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Articles;
 use App\Models\Words;
+use App\Models\Wordsarticles;
 use Illuminate\Http\Request;
 use Symfony\Component\Console\Input\Input;
+use function array_merge;
 
 class ArticlesController extends Controller
 {
@@ -19,8 +21,8 @@ class ArticlesController extends Controller
     public function create(Request $request) {
         $checkTitle = Articles::where('title', '=', $request->title)->first(); // проверка на существование статьи
         $body = str_replace(array("?","!",",",";",".","-","(",")","—", "'"), "", $request->body);
-        preg_replace('/\s+/', ' ', $body);
-        preg_replace('/\x{0301}/u', '', $body);
+        $body = preg_replace('/\s+/', ' ', $body);
+        $body = preg_replace('/\x{0301}/u', '', $body);
         $count_words = count(explode(' ',$body)); // считаю слова
         $body = mb_strtolower($body);
         if($checkTitle === null) {
@@ -63,18 +65,24 @@ class ArticlesController extends Controller
         // ->
 
 
-        $NewWordsInDB = Words::whereIn('text', $body)->get(['id', 'text'])->toArray();
-        $articlesArray = Articles::get(['id', 'body'])->toArray();
+        // $NewWordsInDB = Words::whereIn('text', $body)->get(['id', 'text'])->toArray();
+        // $articlesArray = Articles::get(['id', 'body'])->toArray();
+
         $relation  = [];
-        foreach ($NewWordsInDB as $word){
-            foreach ($articlesArray as $article){
+        foreach (Words::whereIn('text', $body)->get(['id', 'text'])->toArray() as $word){
+            foreach (Articles::get(['id', 'body'])->toArray() as $article){
                 $counter = substr_count(mb_strtolower(' '.$article["body"].' '), ' '.$word["text"].' ');
                 if($counter !== 0){
-                    $relation[] = '(' . $word["id"] . ',' . $article["id"] . ',' . $counter . ')';
+                    $relation[] = ['wordsid' => $word["id"], 'articlesid' => $article["id"], 'counter' => $counter];
                 }
             }
         }
-        return $relation;
-    }
 
+        //беру все старые записи
+        $wordsarticles = Wordsarticles::all()->toArray();
+
+        Wordsarticles::insertOrIgnore(array_merge($wordsarticles, $relation));
+
+        return array_merge($wordsarticles, $relation);
+    }
 }

@@ -18,6 +18,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/articles', 'ArticlesController@index'); // get all
 //    Route::get('/test/{id}', 'CountriesController@indexId'); // get by id
     Route::post('/articles', 'ArticlesController@create'); // create
+    Route::post('/search', 'SearchController@index'); // get by id
 //    Route::put('/test/{id}', 'CountriesController@update'); // create | update by id
 //    Route::delete('/test/{id}', 'CountriesController@destroy'); // delete
 });
