@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// use App\Models\Articles;
+
 use App\Models\Words;
 
 use Illuminate\Http\Request;

@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
-    Route::get('/articles', 'ArticlesController@index'); // get all
-    Route::post('/articles', 'ArticlesController@create'); // create
+    Route::get('/articles', 'ArticlesController@index'); // get all articles
+    Route::post('/articles', 'ArticlesController@create'); // create article
     Route::post('/search', 'SearchController@index'); // search
 });
 
