@@ -13,16 +13,15 @@ class SearchController extends Controller
 {
     public function index(Request $request) {
         if(!$request->text){
-            http_response_code(500);
-            echo json_encode('Пустая строка');
-            die();
+            return response($request->text, 500);
         }
-        $wordid = Words::where('text', mb_strtolower($request->text))->get('id')->first()->toArray();
+        $wordid = Words::where('text', mb_strtolower($request->text))->get('id')->first();
         if(!$wordid){
-            http_response_code(404);
-            echo json_encode('Ничего не нашлось');
-            die();
+            return response(json_encode('Not Found'), 404);
         }
-        return Wordsarticles::where('wordsid', '=', $wordid["id"])->join('articles', 'articles.id', '=', 'wordsarticles.articlesid')->select('articles.title', 'counter')->get();
+        return response(Wordsarticles::where('wordsid', '=', $wordid["id"])
+            ->join('articles', 'articles.id', '=', 'wordsarticles.articlesid')
+            ->select('articles.title', 'counter')
+            ->get(), 200);
     }
 }

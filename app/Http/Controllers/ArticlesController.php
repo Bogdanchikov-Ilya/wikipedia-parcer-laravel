@@ -14,7 +14,7 @@ class ArticlesController extends Controller
     //getAll from maim page
     public function index() {
         $articles = Articles::get(['title', 'url', 'size', 'count_words']);
-        return $articles;
+        return response($articles, 200);
     }
 
     //create
@@ -34,7 +34,7 @@ class ArticlesController extends Controller
                 'count_words' => $count_words,
             ]); // запушил
         } else {
-            return 'Articles whits this name exist';
+            return response(json_encode('Articles whits this name exist'), 400);
         }
 
         $body = mb_strtolower($body);
@@ -83,6 +83,6 @@ class ArticlesController extends Controller
 
         Wordsarticles::insertOrIgnore(array_merge($wordsarticles, $relation));
 
-        return array_merge($wordsarticles, $relation);
+        return response(json_encode('Запись добавлена'), 200);
     }
 }
