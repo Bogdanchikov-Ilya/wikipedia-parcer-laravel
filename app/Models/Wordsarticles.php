@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wordsarticles extends Model
 {
-    protected $fillable = ['wordsid', 'articlesid', 'counter'];
+    protected $fillable = ['word_id', 'article_id', 'counter'];
     public $timestamps = false;
 }

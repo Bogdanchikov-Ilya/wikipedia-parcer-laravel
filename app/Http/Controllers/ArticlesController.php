@@ -73,7 +73,7 @@ class ArticlesController extends Controller
             foreach (Articles::get(['id', 'body'])->toArray() as $article){
                 $counter = substr_count(mb_strtolower(' '.$article["body"].' '), ' '.$word["text"].' ');
                 if($counter !== 0){
-                    $relation[] = ['wordsid' => $word["id"], 'articlesid' => $article["id"], 'counter' => $counter];
+                    $relation[] = ['word_id' => $word["id"], 'article_id' => $article["id"], 'counter' => $counter];
                 }
             }
         }

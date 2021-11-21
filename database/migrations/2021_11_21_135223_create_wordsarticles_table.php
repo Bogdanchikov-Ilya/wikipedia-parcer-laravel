@@ -14,9 +14,12 @@ class CreateWordsarticlesTable extends Migration
     public function up()
     {
         Schema::create('wordsarticles', function (Blueprint $table) {
-            $table->foreign('wordsid')->references('id')->on('words');
-            $table->foreign('articlesid')->references('id')->on('articles');
+            $table->unsignedBigInteger('word_id');
+            $table->unsignedBigInteger('article_id');
+            $table->foreign('word_id')->references('id')->on('words');
+            $table->foreign('article_id')->references('id')->on('articles');
             $table->integer('counter');
+            $table->primary(['word_id','article_id']);
         });
     }
 

@@ -19,8 +19,8 @@ class SearchController extends Controller
         if(!$wordid){
             return response(json_encode('Not Found'), 404);
         }
-        return response(Wordsarticles::where('wordsid', '=', $wordid["id"])
-            ->join('articles', 'articles.id', '=', 'wordsarticles.articlesid')
+        return response(Wordsarticles::where('word_id', '=', $wordid["id"])
+            ->join('articles', 'articles.id', '=', 'wordsarticles.article_id')
             ->select('articles.title', 'counter')
             ->get(), 200);
     }
