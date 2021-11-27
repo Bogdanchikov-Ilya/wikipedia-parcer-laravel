@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
-    Route::get('/articles', 'ArticlesController@index')->with('cors'); // get all articles
-    Route::post('/articles', 'ArticlesController@create')->with('cors');; // create article
-    Route::post('/search', 'SearchController@index')->with('cors');; // search
+    Route::get('/articles', 'ArticlesController@index'); // get all articles
+    Route::post('/articles', 'ArticlesController@create');; // create article
+    Route::post('/search', 'SearchController@index');; // search
 });
 
