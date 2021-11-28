@@ -3,6 +3,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+URL::forceScheme('https');
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
     Route::get('/articles', 'ArticlesController@index'); // get all articles
     Route::post('/articles', 'ArticlesController@create');; // create article
